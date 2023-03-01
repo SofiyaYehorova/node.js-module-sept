@@ -77,3 +77,7 @@ const path = require('path');
 //         console.log(file.isFile());
 //     })
 // })
+
+// fs.mkdir(path.join('test', 'text2'), (err)=>{
+//     if (err) throw new Error()
+// })
