@@ -1,83 +1,47 @@
-// MODULES//
+const fs = require('node:fs/promises');
+const path = require('node:path');
 
-// const {sayHello} = require('./helper');
+// const worker = async () => {
+//     try {
+//         const fileNames = ['file1.txt', 'file2.txt', 'file3.txt', 'file4.txt'];
+//         const folderNames = ['folder1', 'folder2', 'folder3', 'folder4'];
 //
-// sayHello();
+//         for (const folderName of folderNames) {
+//             await fs.mkdir(path.join(process.cwd(), folderName), {recursive: true})
+//         }
+//         for (const fileName of fileNames) {
+//             await fs.writeFile(path.join(process.cwd(), fileName), 'hello everybody!!!!')
+//         }
+//     } catch (e) {
+//         console.log(e.message);
+//     }
+// }
+//
+// worker().then();
 
-//GLOBAL VARIABLES//
-// console.log(__dirname);
-// console.log(__filename);
-// console.log(process.cwd());
+const worker = async () => {
+    const fileNames = ['test1.txt', 'test2.txt', 'test3.txt', 'test4.txt'];
+    const folderNames = ['folder1', 'folder2', 'folder3', 'folder4'];
 
-// console.log(process);
+    const promises = folderNames.map(async (folderName, index) => {
+        const folderPath = path.join(process.cwd(), folderName);
 
-//PATH//
-// const path = require('path');
+        await fs.mkdir(folderPath, {recursive: true});
+        await fs.writeFile(path.join(folderPath, fileNames[index]), 'Hello World🥰');
+    });
+    // console.log(promises);
+    await Promise.all(promises);
+    const files = await fs.readdir(path.join(process.cwd()));
+    // console.log(files);
+    for (const file of files) {
+        const stats = await fs.stat(path.join(process.cwd(), file));
+        const isFile = stats.isFile();
+        if (isFile) {
+            console.log('This is file: ', (path.join(process.cwd(), file)));
+        } else {
+            console.log('This is directory: ', (path.join(process.cwd(), file)));
+        }
+    }
+}
 
-// const joinedPath = path.join(__dirname, 'test', 'text.txt');
-// console.log(joinedPath);
-
-// const normalizedPath = path.normalize('//////test/////test2///test.txt');
-// console.log(normalizedPath);
-
-// const resolvedPath = path.resolve('test', 'test2', 'text.txt');
-// console.log(resolvedPath);
-
-
-//OS//
-
-// const os = require('os');
-
-// console.log(os.arch());
-// console.log(os.cpus());
-
-//FS//
-
-const fs = require('fs');
-const path = require('path');
-
-// fs.readFile('test/text.txt', (err, data) => {
-// if (err) throw new Error();
-//     console.log(data);
-// })
-// fs.writeFile(path.join('test', 'text2.txt'), 'hello from Okten!!!', (err) => {
-//     if (err) throw new Error(err.message)
-// })
-// fs.readFile(path.join(__dirname, 'test', 'text.txt'), (err, data) => {
-//     if (err) throw new Error();
-//     console.log(data.toString());
-// })
-
-// fs.appendFile(path.join('test', 'text2.txt'), '\nHello from Okten again!!!', (err)=>{
-//     if (err) throw new Error()
-// })
-
-// fs.truncate(path.join('test', 'text2.txt'), (err)=>{
-//     if(err) throw new Error()
-// })
-
-// fs.unlink(path.join('test', 'text2.txt'), (err)=>{
-//     if (err) throw new  Error()
-// })
-
-// fs.readdir(path.join('test'), (err, data)=>{
-//     if(err) throw new Error()
-//     console.log(data);
-// })
-
-// fs.stat(path.join('test'), (err, stats)=>{
-//     if(err) throw new Error()
-//     console.log(stats.isDirectory());
-//     console.log(stats.isFile());
-// })
-
-// fs.readdir(path.join('test'), {withFileTypes:true}, (err, data)=>{
-//     if (err) throw new Error();
-//     data.forEach(file=>{
-//         console.log(file.isFile());
-//     })
-// })
-
-// fs.mkdir(path.join('test', 'text2'), (err)=>{
-//     if (err) throw new Error()
-// })
+worker().then();
