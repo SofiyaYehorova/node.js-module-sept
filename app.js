@@ -10,24 +10,13 @@ app.get('/users', async (req, res) => {
     const users = await fsService.reader();
     res.json(users)
 });
-
-app.get('/users/:userId', async (req, res) => {
-    const {userId} = req.params;
-    const users = await fsService.reader();
-    const user = users.find((user) => user.id === +userId);
-
-    if(!user){
-        res.status(422).json(`There is not user with id:${userId}`)
-    }
-    res.json(user);
-})
 app.post('/users', async (req, res) => {
     const {name, age, gender} = req.body;
 
     if (!name || name.length < 2) {
         res.status(400).json('wrong name');
     }
-    if (!age || Number.isInteger(age) || Number.isNaN(age)) {
+    if (!age || !Number.isInteger(age) || Number.isNaN(age)) {
         res.status(400).json('write correct age');
     }
     if (!gender || (gender !== 'male' && gender !== 'female')) {
@@ -46,9 +35,41 @@ app.post('/users', async (req, res) => {
     res.status(201).json(newUser);
 
 });
+app.get('/users/:userId', async (req, res) => {
+    const {userId} = req.params;
+    const users = await fsService.reader();
+    const user = users.find((user) => user.id === +userId);
+
+    if (!user) {
+        res.status(422).json(`There is not user with id:${userId}`)
+    }
+    res.json(user);
+});
+app.put('/users/:userId', async (req, res) => {
+    const {userId} = req.params;
+    const {name, age, gender} = req.body;
+
+    if (name && name.length < 3) {
+        res.status(400).json('wrong name');
+    }
+    if (age && !Number.isInteger(age) || Number.isNaN(age)) {
+        res.status(400).json('wrong age');
+    }
+    if (gender && (gender !== 'male' || gender !== 'female')) {
+        res.status(400).json('wrong gender')
+    }
+
+    const users = await fsService.reader();
+    const index = users.findIndex((user) => user.id === +userId);
+
+    console.log(index);
+    users[index] = {...users[index], ...req.body};
+
+});
+
 
 const PORT = 5000;
 
 app.listen(PORT, () => {
-    console.log('Server has started on PORT ${PORT}✈');
+    console.log(`Server has started on PORT ${PORT}✈`);
 });
