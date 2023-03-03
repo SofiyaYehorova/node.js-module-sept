@@ -11,22 +11,33 @@ app.get('/users', async (req, res) => {
     res.json(users)
 });
 
+app.get('/users/:userId', async (req, res) => {
+    const {userId} = req.params;
+    const users = await fsService.reader();
+    const user = users.find((user) => user.id === +userId);
+
+    if(!user){
+        res.status(422).json(`There is not user with id:${userId}`)
+    }
+    res.json(user);
+})
 app.post('/users', async (req, res) => {
     const {name, age, gender} = req.body;
 
     if (!name || name.length < 2) {
-        res.status(400).json({
-            message: 'write name'
-        });
+        res.status(400).json('wrong name');
     }
     if (!age || Number.isInteger(age) || Number.isNaN(age)) {
         res.status(400).json('write correct age');
     }
-    if (!gender || gender !== 'male' || gender !== 'female') {
+    if (!gender || (gender !== 'male' && gender !== 'female')) {
         res.status(400).json('write correct gender');
     }
-    const users = await fsService.reader();
 
+    // перевіртти чому не спрацьовує коректно перевірка
+
+
+    const users = await fsService.reader();
     const newUser = {id: users[users.length - 1]?.id + 1 || 1, name, age, gender};
 
     users.push(newUser);
