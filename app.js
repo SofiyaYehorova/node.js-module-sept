@@ -1,91 +1,97 @@
 const express = require('express');
-const fsService = require('./fs.services');
 
-const app = express();
+express();
 
 app.use(express.json());
-app.use(express.urlencoded({extended: true}));
+app.use(express.urlencoded({ extended: true }))
 
-app.get('/users', async (req, res) => {
-    const users = await fsService.reader();
+const users = [
+    {
+        name: 'Oleh',
+        age: 19,
+        gender: 'male'
+    },
+    {
+        name: 'Anton',
+        age: 22,
+        gender: 'female'
+    },
+    {
+        name: 'Anya',
+        age: 25,
+        gender: 'female'
+    },
+    {
+        name: 'Ielizavetta',
+        age: 35,
+        gender: 'female'
+    },
+    {
+        name: 'Cocos',
+        age: 70,
+        gender: 'mixed'
+    }
+]
+
+app.get('/users', (req, res)=>{
     res.json(users);
 });
-app.get('/users/:userId', async (req, res) => {
-    const {userId} = req.params;
 
-    const users = await fsService.reader();
-    const user = users.find((user) => user.id === +userId);
-
-    if (!user) {
-        res.status(422).json(`User with id: ${userId} not found!`)
-    }
+app.get('/users/:userId', (req, res)=>{
+    const { userId } = req.params;
+    const user = users[+userId];
 
     res.json(user);
 });
-app.post('/users', async (req, res) => {
-    const {name, age, gender} = req.body;
 
-    if (!name || name.length < 2) {
-        res.status(400).json('short name');
-    }
-    if (!age || !Number.isInteger(age) || Number.isNaN(age)) {
-        res.status(400).json('wrong age!')
-    }
-    if (!gender || (gender !== 'male' && gender !== 'female')) {
-        res.status(400).json('wrong gender')
-    }
+app.post('/users', (req, res)=>{
+    const body = req.body;
+    users.push(body);
 
-    const users = await fsService.reader();
-    const newUser = {id: users[users.length - 1]?.id + 1 || 1, name, age, gender};
+    res.status(201).json({
+        message: 'User created!'
+    })
+})
 
-    users.push(newUser);
-    await fsService.writer(users);
 
-    res.status(201).json(newUser)
-});
-app.patch('/users/:userId', async (req, res) => {
-    const {userId} = req.params;
-    const {name, age, gender} = req.body;
+app.put('/users/:userId', (req, res)=>{
+    const { userId } = req.params;
+    const updatedUser = req.body;
 
-    if (name && name.length <= 2) {
-        res.status(400).json('short name')
-    }
-    if (age && !Number.isInteger(age) || Number.isNaN(age)) {
-        res.status(400).json('wrong age')
-    }
-    if (gender && (gender !== 'male' && gender !== 'female')) {
-        res.status(400).json('wrong gender')
-    }
-    const users = await fsService.reader();
-    const index = users.findIndex((user) => user.id === +userId);
-    if (index === -1) {
-        res.status(422).json(`User with id:${userId} not found!`)
-    }
-    users[index] = {...users[index], ...req.body};
+    users[+userId] = updatedUser;
 
-    await fsService.writer(users);
-    res.status(201).json(users[index]);
-});
-app.delete('/users/:userId', async (req, res) => {
-    const {userId} = req.params;
+    res.status(200).json({
+        message: 'User updated',
+        data: users[+userId]
+    })
+})
 
-    const users = await fsService.reader();
-    const index = users.findIndex((user) => user.id === +userId);
-    console.log(index);
-    if (index === -1) {
-        res.status(422).json(`User with id:${userId} not found!`)
-    }
-    users.splice(index, 1);
-    await fsService.writer(users);
+app.delete('/users/:userId', (req, res)=>{
+    const { userId } = req.params;
 
-    res.sendStatus(204);
+    users.splice(+userId, 1);
+
+    res.status(200).json({
+        message: 'User deleted',
+    })
+})
+
+
+
+
+
+app.get('/welcome', (req, res)=>{
+    res.send('WELCOME');
 });
 
-app.get('/welcome', (req, res) => {
-    res.send('Welcome!')
-});
+
+// app.post()
+// app.put()
+// app.patch()
+// app.delete()
 
 const PORT = 5000;
-app.listen(PORT, () => {
-    console.log(`Service has started on port ${PORT}`);
+
+app.listen(PORT, ()=>{
+    console.log(`Server has started on PORT ${PORT} 🚀🚀🚀`);
 });
