@@ -6,7 +6,6 @@ import { userMiddleware } from "../middlewares/user.middleware";
 const router = Router();
 
 router.get("/", userController.getAll);
-
 router.post("/", userMiddleware.isUserValidCreate, userController.create);
 
 router.get(
@@ -15,7 +14,6 @@ router.get(
   userMiddleware.getByIdOrThrow,
   userController.getById
 );
-
 router.put(
   "/:userId",
   userMiddleware.isUserIdValid,
@@ -23,7 +21,6 @@ router.put(
   userMiddleware.getByIdOrThrow,
   userController.update
 );
-
 router.delete(
   "/:userId",
   userMiddleware.isUserIdValid,

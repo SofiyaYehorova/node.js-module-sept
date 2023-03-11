@@ -1,7 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 
 import { User } from "../models/User.model";
-import { ICommonResponse, IUser } from "../types/user.types";
+import { userService } from "../services/user.service";
+import { ICommonResponse } from "../types/common.types";
+import { IUser } from "../types/user.types";
 
 class UserController {
   public async getAll(
@@ -10,13 +12,14 @@ class UserController {
     next: NextFunction
   ): Promise<Response<IUser[]>> {
     try {
-      const users = await User.find();
+      const users = await userService.getAll();
 
       return res.json(users);
     } catch (e) {
       next(e);
     }
   }
+
   public async getById(
     req: Request,
     res: Response,
@@ -24,12 +27,12 @@ class UserController {
   ): Promise<Response<IUser>> {
     try {
       const { user } = res.locals;
-
       return res.json(user);
     } catch (e) {
       next(e);
     }
   }
+
   public async create(
     req: Request,
     res: Response,
@@ -47,6 +50,7 @@ class UserController {
       next(e);
     }
   }
+
   public async update(
     req: Request,
     res: Response,
@@ -55,20 +59,18 @@ class UserController {
     try {
       const { userId } = req.params;
 
-      const updateUser = await User.findByIdAndUpdate(
+      const updatedUser = await User.findByIdAndUpdate(
         userId,
         { ...req.body },
         { new: true }
       );
 
-      return res.status(201).json({
-        message: "User updated",
-        data: updateUser,
-      });
+      return res.status(201).json(updatedUser);
     } catch (e) {
       next(e);
     }
   }
+
   public async delete(
     req: Request,
     res: Response,

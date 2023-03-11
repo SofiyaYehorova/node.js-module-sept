@@ -1,8 +1,8 @@
 import express, { NextFunction, Request, Response } from "express";
 import mongoose from "mongoose";
 
-import { configs } from "./configs/configs";
-import { userRouter } from "./routers/user.router";
+import { configs } from "./configs/config";
+import { userRouter } from "./routes/user.routes";
 import { IError } from "./types/common.types";
 
 const app = express();
@@ -12,7 +12,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/users", userRouter);
 
-//----ERROR HANDLER----
+// --- ERROR HANDLER ---
 app.use((err: IError, req: Request, res: Response, next: NextFunction) => {
   const status = err.status || 500;
 
@@ -22,11 +22,7 @@ app.use((err: IError, req: Request, res: Response, next: NextFunction) => {
   });
 });
 
-app.get("/welcome", (req: Request, res: Response) => {
-  res.send("WELCOME");
-});
-
-app.listen(configs.PORT, () => {
-  mongoose.connect(process.env.DB_URL).then();
+app.listen(configs.PORT, async () => {
+  await mongoose.connect(configs.DB_URL);
   console.log(`Server has started on PORT ${configs.PORT} 🚀🚀🚀`);
 });
