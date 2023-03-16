@@ -1,9 +1,5 @@
-export enum EGender {
-  male = "male",
-  gender = "gender",
-  mixed = "mixed",
-}
 export interface IUser {
+  _id?: string;
   name: string;
   email: string;
   password: string;
