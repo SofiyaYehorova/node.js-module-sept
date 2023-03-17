@@ -1,6 +1,7 @@
+import * as path from "node:path";
+
 import EmailTemplates from "email-templates";
 import nodemailer, { Transporter } from "nodemailer";
-import * as path from "path";
 
 import { configs } from "../configs";
 import { allTemplates } from "../constants";
