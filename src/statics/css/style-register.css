@@ -1,0 +1,20 @@
+header{
+    height: 60px;
+    /*background-image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_0LhmXs79ckAbetNcR-kGNAJM9g7t-j_oPPARyri4kC6ICx0tyhNxXt9A3lCkNiwl8sQ&usqp=CAU",*/
+    background: darkblue;
+    color: azure;
+    text-align: center;
+    justify-content: center;
+}
+.main{
+    height: 100px;
+    text-align: center;
+    background: darkblue;
+    color: azure;
+}
+footer {
+    height: 60px;
+    text-align: center;
+    background: darkblue;
+    color: azure;
+}
