@@ -30,6 +30,7 @@ class AuthController {
       next(e);
     }
   }
+
   public async refresh(
     req: Request,
     res: Response,
@@ -56,6 +57,38 @@ class AuthController {
         oldPassword,
         newPassword
       );
+
+      res.sendStatus(200);
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  public async forgotPassword(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { user } = req.res.locals;
+      await authService.forgotPassword(user);
+
+      res.sendStatus(200);
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  public async setForgotPassword(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { password } = req.body;
+      const { tokenInfo } = req.res.locals;
+
+      await authService.setForgotPassword(password, tokenInfo._user_id);
 
       res.sendStatus(200);
     } catch (e) {

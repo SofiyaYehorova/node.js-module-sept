@@ -1,3 +1,4 @@
+export * from "./action-token-type";
 export * from "./email.enum";
 export * from "./gender.enum";
 export * from "./sms-action.enum";
