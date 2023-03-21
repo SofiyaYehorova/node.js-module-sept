@@ -1,6 +1,8 @@
 import { EEmailActions } from "../enums";
 
-export const allTemplates = {
+export const allTemplates: {
+  [key: string]: { subject: string; templateName: string };
+} = {
   [EEmailActions.WELCOME]: {
     subject: "Great to see you in our app",
     templateName: "register",
@@ -8,5 +10,9 @@ export const allTemplates = {
   [EEmailActions.FORGOT_PASSWORD]: {
     subject: "Dont worry I will help you!",
     templateName: "forgot.password",
+  },
+  [EEmailActions.ACTIVATE]: {
+    subject: "Activate!",
+    templateName: "activate",
   },
 };

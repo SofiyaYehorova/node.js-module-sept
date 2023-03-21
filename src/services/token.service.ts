@@ -59,7 +59,7 @@ class TokenService {
       throw new ApiError("Token is not valid", 401);
     }
   }
-  public checkTokenAction(token: string, tokenType: EActionTokenType): string {
+  public checkActionToken(token: string, tokenType: EActionTokenType): string {
     try {
       let secret = "";
       switch (tokenType) {
