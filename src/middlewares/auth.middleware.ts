@@ -2,8 +2,8 @@ import { NextFunction, Request, Response } from "express";
 
 import { EActionTokenType, ETokenType } from "../enums";
 import { ApiError } from "../errors";
-import { Action, Token } from "../models";
-import { tokenService } from "../services";
+import { Action, OldPassword, Token } from "../models";
+import { passwordService, tokenService } from "../services";
 
 class AuthMiddleware {
   public async checkAccessToken(
@@ -32,6 +32,7 @@ class AuthMiddleware {
       next(e);
     }
   }
+
   public async checkRefreshToken(
     req: Request,
     res: Response,
@@ -61,6 +62,7 @@ class AuthMiddleware {
       next(e);
     }
   }
+
   public async checkActionForgotToken(
     req: Request,
     res: Response,
@@ -89,6 +91,7 @@ class AuthMiddleware {
       next(e);
     }
   }
+
   public checkActionToken(type: EActionTokenType) {
     return async (req: Request, res: Response, next: NextFunction) => {
       try {
@@ -113,5 +116,41 @@ class AuthMiddleware {
       }
     };
   }
+
+  public async checkOldPassword(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const { body } = req;
+      const { tokenInfo } = req.res.locals;
+
+      const oldPassswords = await OldPassword.find({
+        _user_id: tokenInfo._user_id,
+      });
+
+      if (!oldPassswords) return next();
+
+      await Promise.all(
+        oldPassswords.map(async (record) => {
+          const isMatched = await passwordService.compare(
+            body.password,
+            record.password
+          );
+          if (isMatched) {
+            throw new ApiError(
+              "Your new password is the same as previous password, create new password!",
+              409
+            );
+          }
+        })
+      );
+      next();
+    } catch (e) {
+      next(e);
+    }
+  }
 }
+
 export const authMiddleware = new AuthMiddleware();
