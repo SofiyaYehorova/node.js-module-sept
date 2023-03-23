@@ -6,6 +6,7 @@ import nodemailer, { Transporter } from "nodemailer";
 import { configs } from "../configs";
 import { allTemplates } from "../constants";
 import { EEmailActions } from "../enums";
+
 class EmailService {
   private transporter: Transporter;
   private templateParser;
