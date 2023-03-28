@@ -2,7 +2,7 @@ import { ApiError } from "../errors";
 import { User } from "../models";
 import { IUser } from "../types";
 
-interface IPaginationResponse<T> {
+ export interface IPaginationResponse<T> {
   page: number;
   perPage: number;
   itemCount: number;
