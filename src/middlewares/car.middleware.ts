@@ -11,9 +11,11 @@ class CarMiddleware {
   ): Promise<void> {
     try {
       const { carId } = req.params;
+
       const car = await Car.findById(carId);
+
       if (!car) {
-        throw new ApiError("Car is not foud!", 422);
+        throw new ApiError("Car not found", 422);
       }
 
       res.locals.car = car;

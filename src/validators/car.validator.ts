@@ -1,4 +1,4 @@
-import Joi from "joi";
+import * as Joi from "joi";
 
 export class CarValidator {
   private static brand = Joi.string().min(2).max(15).trim().lowercase();

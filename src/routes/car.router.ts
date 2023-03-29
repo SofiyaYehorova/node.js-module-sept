@@ -11,7 +11,7 @@ import { CarValidator } from "../validators";
 const router = Router();
 
 router.post(
-  "/:carId",
+  "/",
   authMiddleware.checkAccessToken,
   commonMiddleware.isBodyValid(CarValidator.createCar),
   carController.create
@@ -24,18 +24,16 @@ router.get(
   carMiddleware.getByIdOrThrow,
   carController.getById
 );
-
 router.put(
   "/:carId",
   authMiddleware.checkAccessToken,
   commonMiddleware.isIdValid("carId"),
   commonMiddleware.isBodyValid(CarValidator.updateCar),
   carMiddleware.getByIdOrThrow,
-  carController.getById
+  carController.update
 );
-
 router.delete(
-  "/carId",
+  "/:carId",
   authMiddleware.checkAccessToken,
   commonMiddleware.isIdValid("carId"),
   carMiddleware.getByIdOrThrow,
