@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div class="block"></div>
+
+<input placeholder="message" />
+<button>SEND MESSAGE</button>
+
+<button class="join">JOIN ROOM</button>
+
+<script type="module">
+    import { io } from "https://cdn.socket.io/4.4.1/socket.io.esm.min.js";
+
+    const socket = io('http://localhost:5000', {
+        auth:{
+            token:"vjhsvdjhvjhsdjvsdjfv"
+        }
+    });
+
+    // socket.on('user:connected', (data)=>{
+    //     document.write(data.message);
+    // });
+
+    socket.on("message:get", (text) => {
+        const p = document.createElement("p");
+        p.innerText = text;
+        document.querySelector(".block").appendChild(p);
+    });
+
+    document.querySelector("button").onclick = () => {
+        const text = document.querySelector("input").value;
+        socket.emit("message:send", text);
+    };
+
+    const button = document.querySelector('.join');
+    button.onClick=()=>{
+        console.log('hello');
+    }
+
+</script>
+
+</body>
+</html>
