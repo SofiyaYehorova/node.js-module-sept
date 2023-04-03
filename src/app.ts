@@ -3,18 +3,20 @@ import fileUpload from "express-fileupload";
 import * as http from "http";
 import mongoose from "mongoose";
 import { Server, Socket } from "socket.io";
+import * as swaggerUi from "swagger-ui-express";
 
 import { configs } from "./configs";
 import { cronRunner } from "./crons";
 import { ApiError } from "./errors";
 import { authRouter, carRouter, userRouter } from "./routes";
+import * as swaggerJson from "./utils/swagges.json";
 
 const app: Application = express();
 const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: "*",
+    origin: "http://localhost:63342/",
   },
 });
 
@@ -30,8 +32,23 @@ io.on("connection", (socket: Socket) => {
     io.emit("message:get", `${text}`);
   });
 
-  socket.on("disconnect", () => {
-    console.log(`${socket.id} disconnected`);
+  // socket.on("disconnect", () => {
+  //   console.log(`${socket.id} disconnected`);
+  // });
+
+  socket.on("join:room", ({ roomId }) => {
+    socket.join(roomId);
+
+    socket
+      .to(roomId)
+      .emit("user:joined", { socketIg: socket.id, action: "Joined!" });
+  });
+
+  socket.on("left:room", ({ roomId }) => {
+    socket.leave(roomId);
+    socket
+      .to(roomId)
+      .emit("user:left", { socketIg: socket.id, action: "Left!" });
   });
 });
 
@@ -42,6 +59,7 @@ app.use(fileUpload());
 app.use("/cars", carRouter);
 app.use("/users", userRouter);
 app.use("/auth", authRouter);
+app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerJson));
 
 // --- ERROR HANDLER ---
 app.use((err: ApiError, req: Request, res: Response, next: NextFunction) => {

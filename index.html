@@ -12,6 +12,9 @@
 <button>SEND MESSAGE</button>
 
 <button class="join">JOIN ROOM</button>
+<button class="leave">LEAVE ROOM</button>
+
+<div class="block2"></div>
 
 <script type="module">
     import { io } from "https://cdn.socket.io/4.4.1/socket.io.esm.min.js";
@@ -37,10 +40,26 @@
         socket.emit("message:send", text);
     };
 
-    const button = document.querySelector('.join');
-    button.onClick=()=>{
-        console.log('hello');
-    }
+    const joinRoom = document.querySelector(".join");
+    const leaveRoom = document.querySelector(".leave");
+
+    joinRoom.onclick = () => {
+        socket.emit("join:room", { roomId: 1 });
+    };
+
+    leaveRoom.onclick = () => {
+        socket.emit("left:room", { roomId: 1 });
+    };
+
+    socket.on("user:joined", (data) => {
+        document.write(JSON.stringify(data));
+    });
+
+
+    socket.on("user:left", (data) => {
+        document.write(JSON.stringify(data));
+    });
+
 
 </script>
 
