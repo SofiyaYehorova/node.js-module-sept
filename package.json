@@ -12,15 +12,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/KostiaLopukh/sept-2022.git"
+    "url": "git+https://github.com/SofiyaYehorova/node.js-module-sept.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/KostiaLopukh/sept-2022/issues"
+    "url": "https://github.com/SofiyaYehorova/node.js-module-sept/issues"
   },
-  "homepage": "https://github.com/KostiaLopukh/sept-2022#readme",
+  "homepage": "https://github.com/SofiyaYehorova/node.js-module-sept#readme",
   "dependencies": {
     "@aws-sdk/client-s3": "^3.301.0",
     "bcrypt": "^5.1.0",
