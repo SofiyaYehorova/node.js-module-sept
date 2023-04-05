@@ -3,7 +3,7 @@ import { model, Schema, Types } from "mongoose";
 import { EActionTokenType } from "../enums";
 import { User } from "./User.model";
 
-const actionTokenSchema = new Schema(
+const actionTokensSchema = new Schema(
   {
     _user_id: {
       type: Types.ObjectId,
@@ -25,4 +25,4 @@ const actionTokenSchema = new Schema(
   }
 );
 
-export const Action = model("Action", actionTokenSchema);
+export const Action = model("Action", actionTokensSchema);
