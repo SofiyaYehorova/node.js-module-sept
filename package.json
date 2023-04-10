@@ -22,7 +22,6 @@
   },
   "homepage": "https://github.com/SofiyaYehorova/node.js-module-sept#readme",
   "dependencies": {
-    "18": "^0.0.0",
     "@aws-sdk/client-s3": "^3.301.0",
     "bcrypt": "^5.1.0",
     "cron": "^2.3.0",
